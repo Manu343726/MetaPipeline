@@ -12,50 +12,39 @@
 
 namespace mp
 {
-    template<template<typename...> class C>
-    using command = tml::lazy<C>;
+    template<template<typename...> class C , typename... ARGS>
+    using command = tml::lazy<C,ARGS...>;
     
     namespace commands
     {
-        using map    = mp::command<tml::map>;
-        using filter = mp::command<tml::filter>;
+        template<typename... ARGS>
+        using map    = mp::command<tml::map,ARGS...>;
+        
+        template<typename... ARGS>
+        using filter = mp::command<tml::filter,ARGS...>;
+        
+        template<typename F>
+        using map_direct = F;
     }
     
-    template<typename COMMAND , typename... ARGS>
-    struct stage
-    {
-        using command = COMMAND;
-        using args    = tml::list<ARGS...>;
-    };
     
-    template<typename S>
-    using stage_command = typename S::command;
-    
-    template<typename S>
-    using stage_args    = typename S::args;
-    
-    
-    
-    template<typename STATE , typename STAGE>
-    struct stage_executor;
-    
-    template<typename STATE , typename COMMAND , typename... ARGS>
-    struct stage_executor<STATE,mp::stage<COMMAND,ARGS...>> :
-        public tml::function<tml::eval<COMMAND,ARGS...,STATE>>
+    template<typename STATE , typename COMMAND>
+    struct command_executor :
+        public tml::function<tml::eval<COMMAND,STATE>>
     {};
 }
 
 namespace tml
 {
-    template<typename STATE , typename STAGE>
-    struct overrides_eval<mp::stage_executor<STATE,STAGE>> : public tml::true_type
+    template<typename STATE , typename COMMAND>
+    struct overrides_eval<mp::command_executor<STATE,COMMAND>> : public tml::true_type
     {};
     
     namespace impl
     {
-        template<typename STATE , typename STAGE>
-        struct eval<mp::stage_executor<STATE,STAGE>,tml::empty_list> : 
-            public mp::stage_executor<STATE,STAGE>
+        template<typename STATE , typename COMMAND>
+        struct eval<mp::command_executor<STATE,COMMAND>,tml::empty_list> : 
+            public mp::command_executor<STATE,COMMAND>
         {};
     }
 }

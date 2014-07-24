@@ -15,22 +15,22 @@
 namespace mp
 {    
     
-    template<typename... STAGES>
-    using pipe = tml::list<STAGES...>;
+    template<typename... COMMANDS>
+    using pipe = tml::list<COMMANDS...>;
     
     namespace impl
     {
-        template<typename INPUT , typename... STAGES>
+        template<typename INPUT , typename... COMMANDS>
         struct pipeline
         {
-            using pipe = mp::pipe<STAGES...>;
+            using pipe = mp::pipe<COMMANDS...>;
 
-            using result = tml::foldl<tml::lazy<mp::stage_executor>,INPUT,pipe>;
+            using result = tml::foldl<tml::lazy<mp::command_executor>,INPUT,pipe>;
         };
     }
     
-    template<typename INPUT , typename... STAGES>
-    using pipeline = typename mp::impl::pipeline<INPUT,STAGES...>::result;
+    template<typename INPUT , typename... COMMANDS>
+    using pipeline = typename mp::impl::pipeline<INPUT,COMMANDS...>::result;
 }
 
 #endif	/* PIPELINE_HPP */

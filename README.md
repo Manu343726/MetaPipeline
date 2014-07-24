@@ -20,13 +20,13 @@ and some utilities for parameter binding, curryfying, etc.
 
 ## MetaPipeline
 
-Writting simple examples like the above is easy, but as the complexity of an expression (Or an entire metaprogram) increases, there are more nested template expressions, more
+Writting simple examples like the above is easy, but as the complexity of an expression (Or an entire metaprogram) grows, there are more nested template expressions, more
 dependencies, and the most important IMHO, the syntax become unreadable.
 
 MetaPipeline provides a fluent interface for such functionality in the form of a *pipeline* of commands, where the input of each command is the output of the previous, and so on.
 Each command represents some functionality of the Turbo library, and different argumments for that commands could be specified. Here is an example equivalent to the previous one:
 
     using doubled = mp::pipeline<tml::integer_list<1,2,3,4,5> , 
-                                 mp::stage< mp::commands::filter , filter                           >,
-                                 mp::stage< mp::commands::map    , tml::lambda<_1 , tml::add<_1,_1> >
+                                 mp::commands::filter<filter> ,
+                                 mp::commands::map<tml::lambda<_1 , tml::add<_1,_1>>
                                 >;
