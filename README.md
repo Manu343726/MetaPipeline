@@ -26,14 +26,14 @@ dependencies, and the most important IMHO, the syntax become unreadable.
 MetaPipeline provides a fluent interface for such functionality in the form of a *pipeline* of commands, where the input of each command is the output of the previous, and so on.
 Each command represents some functionality of the Turbo library, and different argumments for that commands could be specified. Here is an example equivalent to the previous one:
 
-    using doubled = mp::pipeline<tml::integer_list<1,2,3,4,5> , 
+    using doubled = mp::pipeline<mp::start<tml::integer_list<1,2,3,4,5>> , 
                                  mp::filter<filter> ,
                                  mp::map<tml::lambda<_1 , tml::add<_1,_1>>
                                 >;
 
 ## Features
 
-The functional pipelines implemented by MetaPipeline are not simple chains of secuential commands. Each pipeline carries an internal state of the execution, which includes the
+The functional pipelines implemented by MetaPipeline are not simple chains of sequential commands. Each pipeline carries an internal state of the execution, which includes the
 current value of the computation and the set of variables defined at that time. Yes, MetaPipeline allows you to define variables inside a pipeline, store values on them, and use
 that variables in the expressions passed to the pipeline commands:
 
