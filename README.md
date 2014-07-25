@@ -69,31 +69,31 @@ MetaPipeline differentiates from two types of commands:
    `mp::mutable_command` takes the command to be defined and an unlimited number of extra parameters representing the parameters of the command subject to apply variable
    substitution:
    
-       template<typename COMMAND , typename... ARGS>
-       struct mutable_command
-       {};
+        template<typename COMMAND , typename... ARGS>
+        struct mutable_command
+        {};
 
    Consider this example:
 
-       template<typename VALUE>
-       using write_on_x = mp::mutable_command<tml::bind<mp::write_variable,_1,mp::variable<X,VALUE>> , VALUE>;
+        template<typename VALUE>
+        using write_on_x = mp::mutable_command<tml::bind<mp::write_variable,_1,mp::variable<X,VALUE>> , VALUE>;
 
    The metafunction `mp::write_variable<STATE,VARIABLE>` adds or overwrites the specified variable. Our command, designed to give a value to the variable `X`, binds that
    function making it an unary function expecting the computation state, which is what the pipeline execution engine passes to mutable commands.  
    Also the command parameter, the value to be asigned to `X`, is passed as a variable substitution target. Thats done to allow the user to pass pipeline variables as values,
    making possible commands like this:
 
-       ...
-       mp::write_on_x<Y>,
-       ... 
+        ...
+        mp::write_on_x<Y>,
+        ... 
     
 
- - **Inmutable commands**:  These commands perform computations. Their signature is a unary metafunnction expecting the current value of the computation, and their result is
+ - **Inmutable commands**: These commands perform computations. Their signature is a unary metafunnction expecting the current value of the computation, and their result is
    the new one. They inherit (aliase) from `mp::inmutable_command`.  
    
    Exactly as mutable commands, the base template wraps the command and have extra argumments for command parameters expecting variable substitution. Here is an example:
 
-       template<typename VALUE , typename COMPARATOR = tml::lazy<tml::equal>>
-       using erase_if_equal = mp::inmutable_command<tml::bind<tml::filter,tml::lambda<_1 , tml::deval<COMPARATOR,_1,VALUE>>,_1> , VALUE>;
+        template<typename VALUE , typename COMPARATOR = tml::lazy<tml::equal>>
+        using erase_if_equal = mp::inmutable_command<tml::bind<tml::filter,tml::lambda<_1 , tml::deval<COMPARATOR,_1,VALUE>>,_1> , VALUE>;
                               
    The example above is a command to filter all the elements of the current computation value equal to a given value. Also allows you to pass a custom binary comparison function.
