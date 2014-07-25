@@ -18,14 +18,17 @@ namespace mp
     template<typename... COMMANDS>
     using pipe = tml::list<COMMANDS...>;
     
+    struct uninitialized_pipeline{};
+    
     namespace impl
     {
-        template<typename INPUT , typename... COMMANDS>
+        template<typename... COMMANDS>
         struct pipeline
         {
             using pipe = mp::pipe<COMMANDS...>;
+            using init_state = mp::computation_state<tml::empty_list,mp::uninitialized_pipeline>;
 
-            using result = tml::foldl<tml::lazy<mp::command_executor>,INPUT,pipe>;
+            using result = typename tml::foldl<tml::lazy<mp::command_executor>,init_state,pipe>::comp_value;
         };
     }
     

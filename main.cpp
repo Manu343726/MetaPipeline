@@ -13,18 +13,29 @@
 #include "Turbo/bind.hpp"
 
 #include "pipeline.hpp"
+#include "commands.hpp"
 
 using namespace tml::placeholders;
 
 
-using result = mp::pipeline<tml::list<int,float,double,long long int,short unsigned int>,
-                            mp::commands::map<tml::util::func::size_of<_1>>,
-                            mp::commands::filter<tml::bind<tml::less_or_equal,tml::size_t<8>,_1>>,
-                            mp::commands::map_direct<tml::bind<tml::repeat,_1,tml::size_t<200>>>
+struct X : public tml::value_chameleon {};
+struct Y : public tml::value_chameleon {};
+struct Z : public tml::value_chameleon {};
+
+
+
+using breakpoint = mp::pipeline<mp::start<tml::Int<4>>,
+                                mp::save<X>,
+                                mp::repeat<tml::size_t<10>>,
+                                mp::Break
+                               >;
+
+using result = mp::pipeline<mp::Continue<breakpoint>,
+                            mp::map<tml::lambda<_1 , tml::mul<_1,_1>>>
                            >;
 
 int main( ) 
 {
-    std::cout << tml::to_string<result>() << std::endl;
+    std::cout << std::boolalpha << tml::to_string<result>() << std::endl; //[16,16,16...,16] please...
 }
 

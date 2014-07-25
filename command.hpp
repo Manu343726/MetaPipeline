@@ -9,29 +9,85 @@
 #define	COMMAND_HPP
 
 #include "Turbo/algorithm.hpp"
+#include "Turbo/bind.hpp"
+#include "computation_state.hpp"
+#include "variable.hpp"
 
 namespace mp
 {
-    template<template<typename...> class C , typename... ARGS>
-    using command = tml::lazy<C,ARGS...>;
+    template<typename COMMAND , typename... ARGS>
+    struct mutable_command
+    {};
     
-    namespace commands
+    template<typename COMMAND , typename... ARGS>
+    struct inmutable_command
+    {};
+    
+    template<typename COMMAND , typename STATE>
+    struct apply_variables_to_command;
+    
+    template<typename STATE , typename COMMAND , typename... ARGS>
+    struct apply_variables_to_command<mp::mutable_command<COMMAND,ARGS...>,STATE>
     {
-        template<typename... ARGS>
-        using map    = mp::command<tml::map,ARGS...>;
+        using args = tml::list<mp::apply_variables<ARGS,STATE>...>;
         
-        template<typename... ARGS>
-        using filter = mp::command<tml::filter,ARGS...>;
+        template<typename... APPLIED_ARGS>
+        struct compute_result
+        {
+            using result = tml::multi_let<ARGS...,APPLIED_ARGS...,COMMAND>;
+        };
         
-        template<typename F>
-        using map_direct = F;
-    }
+        using result = tml::eval<tml::uncurry<compute_result>,args>;
+    };
+    
+    template<typename STATE , typename COMMAND , typename... ARGS>
+    struct apply_variables_to_command<mp::inmutable_command<COMMAND,ARGS...>,STATE>
+    {
+        using args = tml::list<mp::apply_variables<ARGS,STATE>...>;
+        
+        template<typename... APPLIED_ARGS>
+        struct compute_result
+        {
+            using result = tml::multi_let<ARGS...,APPLIED_ARGS...,COMMAND>;
+        };
+        
+        using result = tml::eval<tml::uncurry<compute_result>,args>;
+    };
+    
+    template<typename STATE , typename COMMAND>
+    struct apply_variables_to_command<mp::mutable_command<COMMAND>,STATE> : public tml::function<COMMAND>
+    {};
+    
+    template<typename STATE , typename COMMAND>
+    struct apply_variables_to_command<mp::inmutable_command<COMMAND>,STATE> : public tml::function<COMMAND>
+    {};
+    
     
     
     template<typename STATE , typename COMMAND>
-    struct command_executor :
-        public tml::function<tml::eval<COMMAND,STATE>>
-    {};
+    struct command_executor;
+    
+    template<typename STATE , typename COMMAND , typename... ARGS>
+    struct command_executor<STATE,mutable_command<COMMAND,ARGS...>>
+    {
+        using original_command = mp::inmutable_command<COMMAND,ARGS...>;
+        
+        //using command          = COMMAND;
+        using command          = typename mp::apply_variables_to_command<original_command,STATE>::result;
+        
+        using result           = tml::eval<command,STATE>;
+    };
+    
+    template<typename STATE , typename COMMAND , typename... ARGS>
+    struct command_executor<STATE,inmutable_command<COMMAND,ARGS...>>
+    {
+        using original_command = mp::inmutable_command<COMMAND,ARGS...>;
+        
+        //using command          = COMMAND;
+        using command          = typename mp::apply_variables_to_command<original_command,STATE>::result;
+        
+        using result           = mp::computation_state<typename STATE::variables,tml::eval<command,typename STATE::comp_value>>;
+    };
 }
 
 namespace tml
@@ -43,8 +99,7 @@ namespace tml
     namespace impl
     {
         template<typename STATE , typename COMMAND>
-        struct eval<mp::command_executor<STATE,COMMAND>,tml::empty_list> : 
-            public mp::command_executor<STATE,COMMAND>
+        struct eval<mp::command_executor<STATE,COMMAND>,tml::empty_list> : public tml::function<typename mp::command_executor<STATE,COMMAND>::result>
         {};
     }
 }

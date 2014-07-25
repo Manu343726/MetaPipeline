@@ -5,7 +5,10 @@
                    displayName="Header Files"
                    projectFiles="true">
       <itemPath>command.hpp</itemPath>
+      <itemPath>commands.hpp</itemPath>
+      <itemPath>computation_state.hpp</itemPath>
       <itemPath>pipeline.hpp</itemPath>
+      <itemPath>variable.hpp</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -44,9 +47,15 @@
       </compileType>
       <item path="command.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="commands.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="computation_state.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="pipeline.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="variable.hpp" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
     <conf name="Release" type="1">
@@ -71,9 +80,15 @@
       </compileType>
       <item path="command.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="commands.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="computation_state.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="pipeline.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="variable.hpp" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
   </confs>
