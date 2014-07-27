@@ -26,14 +26,14 @@ dependencies, and the most important IMHO, the syntax become unreadable.
 MetaPipeline provides a fluent interface for such functionality in the form of a *pipeline* of commands, where the input of each command is the output of the previous, and so on.
 Each command represents some functionality of the Turbo library, and different argumments for that commands could be specified. Here is an example equivalent to the previous one:
 
-    using doubled = mp::pipeline<tml::integer_list<1,2,3,4,5> , 
+    using doubled = mp::pipeline<mp::start<tml::integer_list<1,2,3,4,5>> , 
                                  mp::filter<filter> ,
                                  mp::map<tml::lambda<_1 , tml::add<_1,_1>>
                                 >;
 
 ## Features
 
-The functional pipelines implemented by MetaPipeline are not simple chains of secuential commands. Each pipeline carries an internal state of the execution, which includes the
+The functional pipelines implemented by MetaPipeline are not simple chains of sequential commands. Each pipeline carries an internal state of the execution, which includes the
 current value of the computation and the set of variables defined at that time. Yes, MetaPipeline allows you to define variables inside a pipeline, store values on them, and use
 that variables in the expressions passed to the pipeline commands:
 
@@ -69,31 +69,31 @@ MetaPipeline differentiates from two types of commands:
    `mp::mutable_command` takes the command to be defined and an unlimited number of extra parameters representing the parameters of the command subject to apply variable
    substitution:
    
-       template<typename COMMAND , typename... ARGS>
-       struct mutable_command
-       {};
+        template<typename COMMAND , typename... ARGS>
+        struct mutable_command
+        {};
 
    Consider this example:
 
-       template<typename VALUE>
-       using write_on_x = mp::mutable_command<tml::bind<mp::write_variable,_1,mp::variable<X,VALUE>> , VALUE>;
+        template<typename VALUE>
+        using write_on_x = mp::mutable_command<tml::bind<mp::write_variable,_1,mp::variable<X,VALUE>> , VALUE>;
 
    The metafunction `mp::write_variable<STATE,VARIABLE>` adds or overwrites the specified variable. Our command, designed to give a value to the variable `X`, binds that
    function making it an unary function expecting the computation state, which is what the pipeline execution engine passes to mutable commands.  
    Also the command parameter, the value to be asigned to `X`, is passed as a variable substitution target. Thats done to allow the user to pass pipeline variables as values,
    making possible commands like this:
 
-       ...
-       mp::write_on_x<Y>,
-       ... 
+        ...
+        mp::write_on_x<Y>,
+        ... 
     
 
- - **Inmutable commands**:  These commands perform computations. Their signature is a unary metafunnction expecting the current value of the computation, and their result is
+ - **Inmutable commands**: These commands perform computations. Their signature is a unary metafunnction expecting the current value of the computation, and their result is
    the new one. They inherit (aliase) from `mp::inmutable_command`.  
    
    Exactly as mutable commands, the base template wraps the command and have extra argumments for command parameters expecting variable substitution. Here is an example:
 
-       template<typename VALUE , typename COMPARATOR = tml::lazy<tml::equal>>
-       using erase_if_equal = mp::inmutable_command<tml::bind<tml::filter,tml::lambda<_1 , tml::deval<COMPARATOR,_1,VALUE>>,_1> , VALUE>;
+        template<typename VALUE , typename COMPARATOR = tml::lazy<tml::equal>>
+        using erase_if_equal = mp::inmutable_command<tml::bind<tml::filter,tml::lambda<_1 , tml::deval<COMPARATOR,_1,VALUE>>,_1> , VALUE>;
                               
    The example above is a command to filter all the elements of the current computation value equal to a given value. Also allows you to pass a custom binary comparison function.
