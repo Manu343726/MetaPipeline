@@ -85,7 +85,7 @@ namespace mp
             using value = typename T::value;
 
             using result = tml::conditional<tml::Bool<std::is_same<v_name,name>::value>,
-                                            mp::variable<name,v_name>,
+                                            mp::variable<name,v_value>,
                                             mp::variable<name,value>
                                            >;                                      
         };
@@ -105,8 +105,6 @@ namespace mp
     
     template<typename NAME>
     using search_name = tml::bind<mp::variable_exists_filter,NAME,tml::placeholders::_1>;
-    
-    using search_result = tml::eval<search_name<tml::true_type>,tml::true_type>;
 
     template<typename VARIABLES , typename NAME>
     struct variable_exists : public tml::function<tml::any<mp::search_name<NAME>,VARIABLES>>
