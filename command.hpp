@@ -8,8 +8,8 @@
 #ifndef COMMAND_HPP
 #define	COMMAND_HPP
 
-#include "Turbo/algorithm.hpp"
-#include "Turbo/bind.hpp"
+#include "manu343726/turbo_core/algorithm.hpp"
+#include "manu343726/turbo_core/bind.hpp"
 #include "computation_state.hpp"
 #include "variable.hpp"
 

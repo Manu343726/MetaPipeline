@@ -8,10 +8,10 @@
 #ifndef VARIABLE_HPP
 #define	VARIABLE_HPP
 
-#include "Turbo/let_expressions.hpp"
-#include "Turbo/high_order_functions.hpp"
-#include "Turbo/placeholders.hpp"
-#include "Turbo/bind.hpp"
+#include "manu343726/turbo_core/let_expressions.hpp"
+#include "manu343726/turbo_core/high_order_functions.hpp"
+#include "manu343726/turbo_core/placeholders.hpp"
+#include "manu343726/turbo_core/bind.hpp"
 
 #include "computation_state.hpp"
 
