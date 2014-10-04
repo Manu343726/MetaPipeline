@@ -1,5 +1,5 @@
-MetaPipeline
-============
+Flux
+====
 
 Human friendly template metaprogramming. Take the continuation monad to the extreme.
 
@@ -20,7 +20,7 @@ using filtered = tml::filter<filter,numbers>;
 using doubled  = tml::map<tml::lambda<_1 , tml::add<_1,_1>>,filtered>;
 ```
 
-## Flux
+## What's Flux?
 
 Writting simple examples like the above is easy, but as the complexity of an expression (Or an entire metaprogram) grows, there are more nested template expressions, more
 dependencies, and the most important IMHO, the syntax become unreadable.
@@ -69,4 +69,4 @@ using result = flux::pipe<flux::Continue<breakpoint> ,
 
 These are only simple examples of what Flux can do. A pipe (Which really acts as a program) has those properties and data a common running program has: A memory with the declared variables and its values, the current state of the pipe, a command buffer, etc; all accessible and manipulable by the user with such APIs. 
 
-The idea is to build up a real "runtime" and "language" to deal with template metaprogramming.
+The idea is to build up a real "runtime" and "language" to deal with template metaprogramming. You write a *program*, that program has a *runtime* containing program *variables* and *commands* (Instructions). Stop thinking on ugly templates, start thinking on algorithms.
