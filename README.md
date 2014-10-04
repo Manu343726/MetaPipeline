@@ -70,3 +70,13 @@ using result = flux::pipe<flux::Continue<breakpoint> ,
 These are only simple examples of what Flux can do. A pipe (Which really acts as a program) has those properties and data a common running program has: A memory with the declared variables and its values, the current state of the pipe, a command buffer, etc; all accessible and manipulable by the user with such APIs. 
 
 The idea is to build up a real "runtime" and "language" to deal with template metaprogramming. You write a *program*, that program has a *runtime* containing program *variables* and *commands* (Instructions). Stop thinking on ugly templates, start thinking on algorithms.
+
+``` cpp
+using result = flux::pipe<flux::start<tml::Int<0> , //Start the "program" with 0 as state
+                          flux::label<L1>         , //Save a label pointing to the current command
+                          flux::apply<tml::bind<tml::add,_1,tml::Int<1>>> , //Increment state
+                          flux::jump_if<tml::lambda<_1,tml::greater_than<_1,tml::Int<5>>> , L1> //Repeat if state <= 5
+                         >;
+```
+
+This could be seen as compile-time assembly, but imagine what you could even do. Do metaprogramming in a functional/fluent way, but use variables in a procedural way if you like, do jups, ifs, etc. 
