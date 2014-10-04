@@ -1,0 +1,4 @@
+Scanning dependencies of target manu343726_flux_tests_main
+[100%] Building CXX object /home/manu343726/Documentos/flux/build/manu343726/flux_tests/CMakeFiles/manu343726_flux_tests_main.dir/main.cpp.o
+Linking CXX executable /home/manu343726/Documentos/flux/bin/manu343726_flux_tests_main
+[100%] Built target manu343726_flux_tests_main
