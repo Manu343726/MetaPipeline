@@ -6,12 +6,19 @@
 # is deleted (Its located on ./cmake). So this scripts saves the project prior to clean and
 # restores it after reconfiguring the biicode project.
 
-mkdir ./tmp_netbeans
-cp -r ./cmake/nbproject ./tmp_netbeans
+echo "Creating backup of netbeans project..."
+
+mkdir -v ./tmp_netbeans
+cp -r -v ./cmake/nbproject ./tmp_netbeans
+
+echo "Done. Cleaning and reconfiguring biicode project..."
 
 bii clean
 bii cpp:configure
 bii find
 
+echo "Restoring netbeans project..."
 cp -r ./tmp_netbeans/nbproject ./cmake
 rm -r -f ./tmp_netbeans
+
+echo "Done."

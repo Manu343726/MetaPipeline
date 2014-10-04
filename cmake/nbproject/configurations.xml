@@ -46,7 +46,7 @@
         <makeTool>
           <buildCommandWorkingDir>..</buildCommandWorkingDir>
           <buildCommand>bii cpp:build</buildCommand>
-          <cleanCommand>bii cpp:configure</cleanCommand>
+          <cleanCommand>./clean.sh</cleanCommand>
           <executablePath>../bin/manu343726_flux_tests_main</executablePath>
           <ccTool>
             <incDir>
