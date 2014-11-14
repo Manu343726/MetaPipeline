@@ -12,6 +12,7 @@
 #include "Turbo/runtime_placeholders.hpp"
 #include "Turbo/to_runtime.hpp"
 #include "Turbo/bind.hpp"
+#include "Turbo/basic_types.hpp"
 
 #include "pipeline.hpp"
 #include "commands.hpp"
@@ -24,7 +25,16 @@ struct X : public tml::value_chameleon {};
 struct Y : public tml::value_chameleon {};
 struct Z : public tml::value_chameleon {};
 
+using r = mp::pipeline<mp::start<tml::Int<0>>,
+                       mp::repeat<tml::size_t<100>>
+                      >;
 
+int main()
+{
+    std::cout << tml::to_string<r>() << std::endl;
+}
+
+/*
 using test_state = mp::computation_state<tml::list<mp::variable<X,tml::Int<0>> , mp::variable<Y,tml::Int<1>> , mp::variable<Z,tml::Int<2>>> , mp::uninitialized_pipeline>;
 
 
@@ -50,4 +60,5 @@ int main( )
     std::cout << std::boolalpha << tml::to_string<ex2>() << std::endl;
     std::cout << std::boolalpha << tml::to_string<result>() << std::endl;
 }
+*/
 
